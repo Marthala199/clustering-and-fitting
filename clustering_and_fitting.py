@@ -147,7 +147,7 @@ def plot_fitted_data(data, x, y):
     return
 
 def main():
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv('CC GENERAL.csv')
     df = preprocessing(df)
     col = 'BALANCE'
     plot_relational_plot(df)
