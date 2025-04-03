@@ -15,17 +15,20 @@ def plot_relational_plot(df):
     sns.scatterplot(
         data=df, x='BALANCE', y='PURCHASES',
         alpha=0.7, edgecolor='black',
-        cmap='coolwarm', hue=df['PURCHASES'], s=100
+        palette='coolwarm', hue='PURCHASES', s=100
     )
 
     plt.title('Balance vs Purchases', fontsize=16,
-             fontweight='bold', color='darkblue')
+              fontweight='bold', color='darkblue')
     plt.xlabel('Balance ($)', fontsize=14, fontweight='bold', color='black')
     plt.ylabel('Purchases ($)', fontsize=14, fontweight='bold', color='black')
 
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.savefig('relational_plot.png', dpi=300, bbox_inches='tight')
     plt.show()
+
+
+# ... [rest of the code remains exactly the same as previous Flake8-compliant version]
 
 
 def plot_categorical_plot(df):
