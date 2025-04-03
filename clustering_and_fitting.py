@@ -5,7 +5,6 @@ import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
-from sklearn.linear_model import LinearRegression
 
 
 def plot_relational_plot(df):
@@ -166,9 +165,20 @@ def perform_clustering(df, col1, col2):
     kmeans = KMeans(n_clusters=optimal_k, random_state=42)
     kmeans.fit(X_scaled)
     labels = kmeans.labels_
-    centroids = scaler.inverse_transform(kmeans.cluster_centers_)
 
     return labels, (df[col1].values, df[col2].values)
+
+
+def plot_clustered_data(labels, data_points):
+    """Plots the clustered data points."""
+    x, y = data_points
+    plt.figure(figsize=(12, 7))
+    sns.scatterplot(x=x, y=y, hue=labels, palette='viridis')
+    plt.title('Clustered Data')
+    plt.xlabel('BALANCE')
+    plt.ylabel('PURCHASES')
+    plt.savefig('clustered_plot.png', dpi=300, bbox_inches='tight')
+    plt.show()
 
 
 def main():
@@ -182,7 +192,6 @@ def main():
     writing(moments, col)
     clustering_results = perform_clustering(df, 'BALANCE', 'PURCHASES')
     plot_clustered_data(*clustering_results)
-
-
+    
 if __name__ == "__main__":
     main()
