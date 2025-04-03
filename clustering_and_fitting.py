@@ -19,16 +19,13 @@ def plot_relational_plot(df):
     )
 
     plt.title('Balance vs Purchases', fontsize=16,
-              fontweight='bold', color='darkblue')
+             fontweight='bold', color='darkblue')  # Fixed indentation
     plt.xlabel('Balance ($)', fontsize=14, fontweight='bold', color='black')
     plt.ylabel('Purchases ($)', fontsize=14, fontweight='bold', color='black')
 
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.savefig('relational_plot.png', dpi=300, bbox_inches='tight')
     plt.show()
-
-
-# ... [rest of the code remains exactly the same as previous Flake8-compliant version]
 
 
 def plot_categorical_plot(df):
@@ -93,11 +90,13 @@ def writing(moments, col):
           f'Standard Deviation = {moments[1]:.2f}, '
           f'Skewness = {moments[2]:.2f}, and '
           f'Excess Kurtosis = {moments[3]:.2f}.')
-    skew_dir = "right" if moments[2] > 0 else "left" if moments[2] < 0 else "no"
-    kurt_type = ("leptokurtic" if moments[3] > 0
-                 else "platykurtic" if moments[3] < 0 else "mesokurtic")
+    skew_dir = ("right" if moments[2] > 0 
+                else "left" if moments[2] < 0 
+                else "no")
+    kurt_type = ("leptokurtic" if moments[3] > 0 
+                 else "platykurtic" if moments[3] < 0 
+                 else "mesokurtic")
     print(f'The data was {skew_dir} skewed and {kurt_type}.')
-    return
 
 
 def perform_clustering(df, col1, col2):
@@ -132,7 +131,8 @@ def perform_clustering(df, col1, col2):
         plt.title('Elbow Method for Optimal Clusters', fontsize=16,
                  fontweight='bold', color='darkblue')
         plt.xlabel('Number of Clusters (K)', fontsize=14, fontweight='bold')
-        plt.ylabel('Inertia (Within-Cluster SSE)', fontsize=14, fontweight='bold')
+        plt.ylabel('Inertia (Within-Cluster SSE)', 
+                   fontsize=14, fontweight='bold')
         plt.grid(True, linestyle='--', alpha=0.6)
         plt.legend()
         plt.savefig('elbow_plot.png', dpi=300, bbox_inches='tight')
@@ -191,7 +191,8 @@ def perform_fitting(df, col1, col2):
     y = df[col2]
     model = LinearRegression()
     model.fit(X, y)
-    x_range = np.linspace(X.min().values[0], X.max().values[0], 100).reshape(-1, 1)
+    x_min, x_max = X.min().values[0], X.max().values[0]
+    x_range = np.linspace(x_min, x_max, 100).reshape(-1, 1)
     y_pred = model.predict(x_range)
     return (X.values.flatten(), y.values), x_range.flatten(), y_pred
 
