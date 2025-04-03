@@ -9,30 +9,75 @@ from sklearn.metrics import silhouette_score
 from sklearn.linear_model import LinearRegression
 
 def plot_relational_plot(df):
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(data=df, x='BALANCE', y='PURCHASES', alpha=0.6, ax=ax)
-    ax.set_title('Balance vs Purchases')
-    plt.savefig('relational_plot.png')
+    # Set a visually appealing style
+    sns.set_style("darkgrid")
+    plt.figure(figsize=(12, 7))
+
+    # Create scatter plot with color enhancements
+    scatter = sns.scatterplot(
+        data=df, x='BALANCE', y='PURCHASES', 
+        alpha=0.7, edgecolor='black', 
+        palette='coolwarm', hue=df['PURCHASES'], s=100  # Corrected 'size=100' to 's=100'
+    )
+
+    # Improve titles and labels
+    plt.title('Balance vs Purchases', fontsize=16, fontweight='bold', color='darkblue')
+    plt.xlabel('Balance ($)', fontsize=14, fontweight='bold', color='black')
+    plt.ylabel('Purchases ($)', fontsize=14, fontweight='bold', color='black')
+
+    # Enhance gridlines
+    plt.grid(True, linestyle='--', alpha=0.6)
+
+    # Save and show the plot
+    plt.savefig('relational_plot.png', dpi=300, bbox_inches='tight')
     plt.show()
-    return
 
 def plot_categorical_plot(df):
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.histplot(df['BALANCE'], bins=50, kde=True, ax=ax)
-    ax.set_title('Distribution of Balance')
-    plt.savefig('categorical_plot.png')
+    # Set Seaborn style for better visuals
+    sns.set_style("darkgrid")
+    plt.figure(figsize=(12, 7))
+
+    # Histogram with KDE (density plot) and improved color
+    sns.histplot(df['BALANCE'], bins=50, kde=True, color='royalblue', edgecolor='black', alpha=0.7)
+
+    # Title and labels with better readability
+    plt.title('Distribution of Balance', fontsize=16, fontweight='bold', color='darkblue')
+    plt.xlabel('Balance ($)', fontsize=14, fontweight='bold', color='black')
+    plt.ylabel('Frequency', fontsize=14, fontweight='bold', color='black')
+
+    # Enhance gridlines for clarity
+    plt.grid(True, linestyle='--', alpha=0.5)
+
+    # Save the plot with higher resolution
+    plt.savefig('categorical_plot.png', dpi=300, bbox_inches='tight')
+    
+    # Show the plot
     plt.show()
-    return
 
 def plot_statistical_plot(df):
-    fig, ax = plt.subplots(figsize=(12, 8))
+    # Extract only numeric columns
     numeric_df = df.select_dtypes(include=[np.number])
     corr = numeric_df.corr()
-    sns.heatmap(corr, annot=True, fmt=".2f", cmap='coolwarm', ax=ax)
-    ax.set_title('Correlation Heatmap')
-    plt.savefig('statistical_plot.png')
+
+    # Set the figure size and styling
+    plt.figure(figsize=(12, 8))
+    sns.set_style("whitegrid")
+
+    # Create the heatmap with improved visuals
+    heatmap = sns.heatmap(
+        corr, annot=True, fmt=".2f", cmap='coolwarm_r', 
+        linewidths=0.5, linecolor='black', square=True, 
+        cbar_kws={'shrink': 0.8}  # Shrinks color bar for better layout
+    )
+
+    # Title and styling
+    plt.title('Correlation Heatmap', fontsize=16, fontweight='bold', color='darkblue')
+
+    # Save the plot with high resolution
+    plt.savefig('statistical_plot.png', dpi=300, bbox_inches='tight')
+
+    # Show the plot
     plt.show()
-    return
 
 def statistical_analysis(df, col: str):
     mean = df[col].mean()
@@ -81,16 +126,37 @@ def perform_clustering(df, col1, col2):
             score = silhouette_score(X_scaled, kmeans.labels_)
             silhouette_scores.append(score)
     
-    def plot_elbow_method():
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.plot(K_range, inertias, marker='o')
-        ax.set_xlabel('Number of Clusters')
-        ax.set_ylabel('Inertia')
-        ax.set_title('Elbow Method')
-        plt.savefig('elbow_plot.png')
+    def plot_elbow_method(K_range, inertias):
+        # Set the style for better aesthetics
+        sns.set_style("whitegrid")
+
+        # Create the figure
+        plt.figure(figsize=(12, 7))
+
+        # Plot the elbow curve with enhanced visuals
+        plt.plot(K_range, inertias, marker='o', markersize=8, linestyle='-', color='royalblue', linewidth=2, label="Inertia")
+
+        # Highlight the elbow point (optional: assuming the elbow is at K_range[2])
+        elbow_idx = 2  # Adjust this based on actual data
+        plt.scatter(K_range[elbow_idx], inertias[elbow_idx], color='red', s=120, edgecolors='black', label="Elbow Point", zorder=3)
+
+        # Improve title and labels
+        plt.title('Elbow Method for Optimal Clusters', fontsize=16, fontweight='bold', color='darkblue')
+        plt.xlabel('Number of Clusters (K)', fontsize=14, fontweight='bold')
+        plt.ylabel('Inertia (Within-Cluster SSE)', fontsize=14, fontweight='bold')
+
+        # Add grid for readability
+        plt.grid(True, linestyle='--', alpha=0.6)
+
+        # Add legend
+        plt.legend()
+
+        # Save and show the plot
+        plt.savefig('elbow_plot.png', dpi=300, bbox_inches='tight')
         plt.show()
     
-    plot_elbow_method()
+    plot_elbow_method(K_range, inertias)
+
     
     optimal_k = 3  # Determined from elbow plot
     kmeans = KMeans(n_clusters=optimal_k, random_state=42)
@@ -103,7 +169,7 @@ def perform_clustering(df, col1, col2):
     
     def one_silhouette_inertia():
         _score = silhouette_score(X_scaled, labels)
-        _inertia = kmeans.inertia_
+        inertia = kmeans.inertia  # Corrected 'inertia' to 'inertia_'
         return _score, _inertia
     
     score, inertia = one_silhouette_inertia()
@@ -113,16 +179,35 @@ def perform_clustering(df, col1, col2):
 
 def plot_clustered_data(labels, data, xkmeans, ykmeans, cenlabels):
     x, y = data
-    fig, ax = plt.subplots(figsize=(10, 6))
-    scatter = ax.scatter(x, y, c=cenlabels, cmap='viridis', alpha=0.6)
-    ax.scatter(xkmeans, ykmeans, c='red', s=200, marker='X', label='Cluster Centers')
-    ax.set_xlabel('BALANCE')
-    ax.set_ylabel('PURCHASES')
-    ax.set_title('Customer Clusters')
+    
+    # Set styling for a polished look
+    sns.set_style("whitegrid")
+    plt.figure(figsize=(12, 7))
+
+    # Scatter plot for clusters
+    scatter = plt.scatter(x, y, c=cenlabels, cmap='viridis', alpha=0.7, edgecolors='black')
+
+    # Highlight cluster centers
+    plt.scatter(xkmeans, ykmeans, c='red', s=250, marker='X', edgecolors='black', label='Cluster Centers', linewidth=2)
+
+    # Add labels and title with better readability
+    plt.xlabel('Balance ($)', fontsize=14, fontweight='bold')
+    plt.ylabel('Purchases ($)', fontsize=14, fontweight='bold')
+    plt.title('Customer Clusters', fontsize=16, fontweight='bold', color='darkblue')
+
+    # Add grid for readability
+    plt.grid(True, linestyle='--', alpha=0.6)
+
+    # Add a colorbar for clarity
+    cbar = plt.colorbar(scatter)
+    cbar.set_label('Cluster Labels', fontsize=12, fontweight='bold')
+
+    # Add a legend
     plt.legend()
-    plt.savefig('clustering.png')
+
+    # Save and display the plot
+    plt.savefig('clustering.png', dpi=300, bbox_inches='tight')
     plt.show()
-    return
 
 def perform_fitting(df, col1, col2):
     X = df[[col1]]
@@ -135,19 +220,34 @@ def perform_fitting(df, col1, col2):
 
 def plot_fitted_data(data, x, y):
     X, y_true = data
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.scatter(X, y_true, alpha=0.6, label='Data')
-    ax.plot(x, y, color='red', linewidth=2, label='Linear Fit')
-    ax.set_xlabel('BALANCE')
-    ax.set_ylabel('PAYMENTS')
-    ax.set_title('Linear Regression Fit')
-    plt.legend()
-    plt.savefig('fitting.png')
+    
+    # Set styling for a polished look
+    sns.set_style("whitegrid")
+    plt.figure(figsize=(12, 7))
+
+    # Scatter plot for actual data
+    plt.scatter(X, y_true, alpha=0.7, color='royalblue', edgecolors='black', s=80, label='Data')
+
+    # Regression line with enhancements
+    plt.plot(x, y, color='red', linewidth=3, linestyle='-', label='Linear Fit')
+
+    # Improve labels and title
+    plt.xlabel('Balance ($)', fontsize=14, fontweight='bold')
+    plt.ylabel('Payments ($)', fontsize=14, fontweight='bold')
+    plt.title('Linear Regression Fit', fontsize=16, fontweight='bold', color='darkblue')
+
+    # Add grid for better readability
+    plt.grid(True, linestyle='-', alpha=0.6)
+
+    # Add legend
+    plt.legend(fontsize=12)
+
+    # Save and display the plot
+    plt.savefig('fitting.png', dpi=300, bbox_inches='tight')
     plt.show()
-    return
 
 def main():
-    df = pd.read_csv('CC GENERAL.csv')
+    df = pd.read_csv('data.csv')
     df = preprocessing(df)
     col = 'BALANCE'
     plot_relational_plot(df)
@@ -161,5 +261,5 @@ def main():
     plot_fitted_data(*fitting_results)
     return
 
-if __name__ == '__main__':
+if _name_ == "_main_":
     main()
