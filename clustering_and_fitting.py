@@ -106,7 +106,13 @@ def writing(moments, col):
           f'Standard Deviation = {moments[1]:.2f}, '
           f'Skewness = {moments[2]:.2f}, and '
           f'Excess Kurtosis = {moments[3]:.2f}.')
-    skew_direction = "right" if moments[2] > 0 else "left" if moments[2] < 0 else "no"
+    if moments[2] > 0:
+    skew_direction = "right"
+    elif moments[2] < 0:
+    skew_direction = "left"
+    else:
+    skew_direction = "no"
+
     kurtosis_type = ("leptokurtic" if moments[3] > 0
                      else "platykurtic" if moments[3] < 0
                      else "mesokurtic")
@@ -165,7 +171,8 @@ def perform_clustering(df, col1, col2):
             color='darkblue'
         )
         plt.xlabel('Number of Clusters (K)', fontsize=14, fontweight='bold')
-        plt.ylabel('Inertia (Within-Cluster SSE)', fontsize=14, fontweight='bold')
+        plt.ylabel('Inertia (Within-Cluster SSE)', fontsize=14, 
+                   fontweight='bold')
         plt.grid(True, linestyle='--', alpha=0.6)
         plt.legend()
         plt.savefig('elbow_plot.png', dpi=300, bbox_inches='tight')
@@ -238,7 +245,7 @@ def perform_fitting(df, col1, col2):
     y = df[col2]
     model = LinearRegression()
     model.fit(X, y)
-    x_range = np.linspace(X.min().values[0], X.max().values[0], 100).reshape(-1, 1)
+    x_range=np.linspace(X.min().values[0],X.max().values[0],100).reshape(-1,1)
     y_pred = model.predict(x_range)
     return (X.values.flatten(), y.values), x_range.flatten(), y_pred
 
