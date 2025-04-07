@@ -136,7 +136,7 @@ def perform_clustering(df, col1, col2):
     
     def one_silhouette_inertia():
         _score = silhouette_score(X_scaled, labels)
-        inertia = kmeans.inertia
+        _inertia = kmeans.inertia_  # Corrected attribute
         return _score, _inertia
     
     score, inertia = one_silhouette_inertia()
