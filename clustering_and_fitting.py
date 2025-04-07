@@ -209,5 +209,5 @@ def main():
     plot_fitted_data(*fitting_results)
     return
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
