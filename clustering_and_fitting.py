@@ -107,11 +107,11 @@ def writing(moments, col):
           f'Skewness = {moments[2]:.2f}, and '
           f'Excess Kurtosis = {moments[3]:.2f}.')
     if moments[2] > 0:
-    skew_direction = "right"
+        skew_direction = "right"
     elif moments[2] < 0:
-    skew_direction = "left"
+        skew_direction = "left"
     else:
-    skew_direction = "no"
+        skew_direction = "no"
 
     kurtosis_type = ("leptokurtic" if moments[3] > 0
                      else "platykurtic" if moments[3] < 0
