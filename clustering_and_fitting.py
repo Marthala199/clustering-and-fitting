@@ -245,7 +245,8 @@ def perform_fitting(df, col1, col2):
     y = df[col2]
     model = LinearRegression()
     model.fit(X, y)
-    x_range=np.linspace(X.min().values[0],X.max().values[0],100).reshape(-1,1)
+    x_range = np.linspace(X.min().values[0], X.max().values[0],
+                          100).reshape(-1, 1)
     y_pred = model.predict(x_range)
     return (X.values.flatten(), y.values), x_range.flatten(), y_pred
 
